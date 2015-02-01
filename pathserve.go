@@ -9,7 +9,7 @@ import (
 )
 
 
-type Directory struct {
+type Files struct {
 
 	Files []File
 
@@ -25,19 +25,23 @@ type File struct {
 }
 
 
-func files (path string)(Directory) {
+func files (path string)(Files) {
 
 
 	fileList := []File{}
 
 	filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
+		 if err != nil {
+                      return err
+               }
+
 		file := File{Name: path, Size: f.Size(), ModTime: f.ModTime(), IsDir: f.IsDir()}
 		fileList = append(fileList, file)
 		
 		return nil
 	})
 
-	return Directory{Files:fileList}
+	return Files{Files:fileList}
 	
 }
 
@@ -47,14 +51,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	js, err := json.Marshal(files(remPartOfURL))
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
+
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func main() {
