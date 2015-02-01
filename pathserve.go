@@ -5,26 +5,39 @@ import (
 	"os"
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 
 type Directory struct {
 
-	Paths []string
+	Files []File
+
+}
+
+type File struct {
+	Name string
+	Size int64
+	
+	ModTime time.Time
+	IsDir bool
 	
 }
 
+
 func files (path string)(Directory) {
 
-	fileList := []string{}
-	
-	filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
-		fileList = append(fileList, path)
 
+	fileList := []File{}
+
+	filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
+		file := File{Name: path, Size: f.Size(), ModTime: f.ModTime(), IsDir: f.IsDir()}
+		fileList = append(fileList, file)
+		
 		return nil
 	})
 
-	return Directory{Paths:fileList}
+	return Directory{Files:fileList}
 	
 }
 
