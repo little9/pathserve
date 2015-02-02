@@ -1,5 +1,5 @@
 # pathserve
-A server that returns a JSON encoded recursive list of files in a directory
+Go http server that returns a JSON-encoded recursive list of files in a directory
 
 After building run: ./pathserve 
 
