@@ -31,9 +31,12 @@ func files (path string)(Files) {
 	fileList := []File{}
 
 	filepath.Walk(path, func(path string, f os.FileInfo, err error) error {
+		
+			
 		 if err != nil {
+		      
                       return err
-               }
+             	}
 
 		file := File{Name: path, Size: f.Size(), ModTime: f.ModTime(), IsDir: f.IsDir()}
 		fileList = append(fileList, file)
